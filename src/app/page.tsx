@@ -1,3 +1,5 @@
+import MovieListPage from "./movies/page";
+
 export default function Home() {
-  return <h1>Home fuga?</h1>;
+  return <MovieListPage />;
 }

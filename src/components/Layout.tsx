@@ -13,7 +13,9 @@ export default function Layout({ children }: LayoutProps) {
       <div>
         <Navbar />
       </div>
-      <div style={{ backgroundColor: "#f5f5f5", height: "90vh" }}>
+      <div
+        style={{ backgroundColor: "#f5f5f5", height: "90vh", overflow: "auto" }}
+      >
         {children}
       </div>
     </div>
