@@ -44,20 +44,17 @@ const data = {
     {
       MovieId: 1,
       MovieTitle: "Tom and Jerry",
-      MoviePhoto:
-        "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg",
+      MoviePhoto: "/images/pokemon.jpg",
     },
     {
       MovieId: 2,
       MovieTitle: "Pokémon: Detective Pikachu",
-      MoviePhoto:
-        "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg",
+      MoviePhoto: "/images/tom_and_jerry.jpg",
     },
     {
       MovieId: 3,
       MovieTitle: "Spider-Man: Across the Spider-Verse",
-      MoviePhoto:
-        "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg",
+      MoviePhoto: "/images/spider_man.jpg",
     },
   ],
   seat_lists: [
