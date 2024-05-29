@@ -1,5 +1,6 @@
 import ICinemaRoom from "@/types/CinemaRoom";
 import IMovies from "@/types/Movies";
+import ISeats from "@/types/Seats";
 import IShowSchedule from "@/types/ShowSchedule";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
@@ -8,6 +9,7 @@ interface TicketSliceState {
   selectedCinemaRoom: ICinemaRoom | null;
   selectedShowTime: IShowSchedule | null;
   selectedShowDate: IShowSchedule | null;
+  selectedSeat: ISeats[];
 }
 
 const initialState: TicketSliceState = {
@@ -15,9 +17,8 @@ const initialState: TicketSliceState = {
   selectedCinemaRoom: null,
   selectedShowTime: null,
   selectedShowDate: null,
+  selectedSeat: [],
 };
-console.log(initialState);
-
 const TicketSlice = createSlice({
   name: "ticket",
   initialState,
@@ -43,12 +44,16 @@ const TicketSlice = createSlice({
     ) => {
       state.selectedShowDate = action.payload;
     },
+    setSelectedSeat: (state, action: PayloadAction<ISeats[]>) => {
+      state.selectedSeat = action.payload;
+    },
 
     resetData: (state) => {
       state.selectedMovie = null;
       state.selectedCinemaRoom = null;
       state.selectedShowTime = null;
       state.selectedShowDate = null;
+      state.selectedSeat = [];
     },
   },
 });
@@ -58,6 +63,7 @@ export const {
   setSelectedCinemaRoom,
   setSelectedShowDate,
   setSelectedShowTime,
+  setSelectedSeat,
   resetData,
 } = TicketSlice.actions;
 export default TicketSlice.reducer;

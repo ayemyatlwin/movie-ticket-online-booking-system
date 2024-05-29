@@ -118,7 +118,7 @@ const data = {
       SeatId: 4,
       RoomId: 1,
       SeatNo: 4,
-      RowName: "D",
+      RowName: "B",
       SeatType: "single",
     },
     {

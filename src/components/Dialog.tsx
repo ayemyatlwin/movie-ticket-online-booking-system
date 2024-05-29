@@ -23,6 +23,7 @@ import {
   setSelectedShowDate,
   setSelectedShowTime,
 } from "@/redux/slices/TicketSlice";
+import { useRouter } from "next/navigation";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -63,6 +64,7 @@ export default function BDialog({
   const handleClose = () => {
     if (handleOnClose) handleOnClose();
   };
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const {
@@ -199,6 +201,7 @@ export default function BDialog({
                   ` ${selectedMovie?.MovieTitle} ${selectedCinemaRoom?.RoomName} ${selectedShowDate?.ShowDate} ${selectedShowTime?.ShowTime}`
                 );
                 handleClose();
+                router.push("./seats");
               }}
               variant="contained"
               sx={{
