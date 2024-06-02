@@ -5,26 +5,27 @@ import { useRouter } from "next/navigation";
 import { setSelectedSeat } from "@/redux/slices/TicketSlice";
 import ISeats from "@/types/Seats";
 import data from "@/constants";
-import { Box, Button, Typography, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { RootState } from "@/redux/Store";
 
 const SeatListPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { selectedSeat } = useSelector((state: RootState) => state.TicketSlice);
-  const [selectedSeats, setSelectedSeats] = useState<ISeats[]>([]);
 
   const handleSeatClick = (seat: ISeats) => {
-    if (selectedSeats.includes(seat)) {
-      setSelectedSeats(selectedSeats.filter((s) => s.SeatId !== seat.SeatId));
+    if (selectedSeat.includes(seat)) {
+      setSelectedSeat(selectedSeat.filter((s) => s.SeatId !== seat.SeatId));
+      dispatch(
+        setSelectedSeat(selectedSeat.filter((s) => s.SeatId !== seat.SeatId))
+      );
     } else {
-      setSelectedSeats([...selectedSeats, seat]);
+      setSelectedSeat([...selectedSeat, seat]);
+      dispatch(setSelectedSeat([...selectedSeat, seat]));
     }
   };
-
+  const { selectedSeat } = useSelector((state: RootState) => state.TicketSlice);
   const handleDoneClick = () => {
-    dispatch(setSelectedSeat(selectedSeats));
-    console.log("selectedSeat REDUX ", selectedSeat);
+    router.push("./tickets");
   };
 
   const renderRow = (rowName: string) => {
@@ -44,10 +45,8 @@ const SeatListPage = () => {
             key={seat.SeatId}
             onClick={() => handleSeatClick(seat)}
             sx={{
-              backgroundColor: selectedSeats.includes(seat)
-                ? "#045494"
-                : "#ccc",
-              color: selectedSeats.includes(seat) ? "white" : "black",
+              backgroundColor: selectedSeat.includes(seat) ? "#045494" : "#ccc",
+              color: selectedSeat.includes(seat) ? "white" : "black",
               border: "1px solid #333",
               borderRadius: "5px",
               padding: 1,
@@ -68,38 +67,30 @@ const SeatListPage = () => {
 
   return (
     <Box textAlign="center">
-      {/* Cinema Screen */}
-      <Box position="relative" height={150} marginTop={2} marginBottom={4}>
+      <Box position="relative" height={150} marginTop={1} marginBottom={1}>
         <Box
           position="absolute"
           top={0}
-          left="33%"
-          width={500}
+          left="35%"
+          width={400}
           height={20}
           bgcolor="black"
         ></Box>
         <Box
           position="absolute"
           top={20}
-          left="33%"
+          left="35%"
           width={0}
           height={0}
-          borderLeft="250px solid transparent"
-          borderRight="250px solid transparent"
-          borderTop="150px solid gray"
+          borderLeft="200px solid transparent"
+          borderRight="200px solid transparent"
+          borderTop="100px solid #d3d3d3"
         ></Box>
       </Box>
 
-      {/* Seats */}
       {rows.map((rowName) => renderRow(rowName))}
 
-      {/* Done Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleDoneClick}
-        sx={{ marginTop: 2 }}
-      >
+      <Button variant="contained" color="primary" onClick={handleDoneClick}>
         Done
       </Button>
     </Box>
