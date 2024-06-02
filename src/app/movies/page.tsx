@@ -15,7 +15,7 @@ const MovieListPage = () => {
 
   const handleCardClick = (movie: IMovies) => {
     dispatch(setSelectedMovie(movie));
-    // router.push("./cinemas");
+    router.push("./cinemas");
   };
 
   return (
@@ -43,9 +43,7 @@ const MovieListPage = () => {
               src={movie.MoviePhoto}
               alt={movie.MovieTitle}
               width={300}
-              height={200}
-              layout="responsive"
-              objectFit="cover"
+              height={300}
             />
             <Stack
               bgcolor={"#f5f5f5"}
