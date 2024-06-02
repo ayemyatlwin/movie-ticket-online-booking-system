@@ -1,7 +1,5 @@
-
+import MovieListPage from "./movies/page";
 
 export default function Home() {
-  return (
-    <h1>Home</h1>
-  );
+  return <MovieListPage />;
 }
