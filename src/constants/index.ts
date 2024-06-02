@@ -44,12 +44,12 @@ const data = {
     {
       MovieId: 1,
       MovieTitle: "Tom and Jerry",
-      MoviePhoto: "/images/pokemon.jpg",
+      MoviePhoto: "/images/tom_and_jerry.jpg",
     },
     {
       MovieId: 2,
       MovieTitle: "Pokémon: Detective Pikachu",
-      MoviePhoto: "/images/tom_and_jerry.jpg",
+      MoviePhoto: "/images/pokemon.jpg",
     },
     {
       MovieId: 3,

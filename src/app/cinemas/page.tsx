@@ -28,7 +28,6 @@ const CinemaListPage = () => {
     selectedCinemaRoom,
     selectedShowDate,
     selectedShowTime,
-    selectedSeat,
   } = useSelector((state: RootState) => state.TicketSlice);
 
   const getShowDate = useCallback(
