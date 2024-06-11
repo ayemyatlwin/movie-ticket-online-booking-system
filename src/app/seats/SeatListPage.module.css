@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.leftPane {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.rightPane {
+  flex: 0.3;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stageContainer {
+  position: relative;
+  height: 150px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 20px;
+  background-color: black;
+}
+
+.stageTriangle {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 200px solid transparent;
+  border-right: 200px solid transparent;
+  border-top: 100px solid #d3d3d3;
+}
+
+.seat {
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.75rem;
+}
+.seat:hover {
+  opacity: 0.75;
+}
+
+.selected {
+  background-color: #045494;
+  color: white;
+}
+
+.unselected {
+  background-color: #ccc;
+  color: black;
+}
+
+.singleSeat {
+  min-width: 30px;
+  min-height: 30px;
+}
+
+.doubleSeat {
+  min-width: 60px;
+  min-height: 30px;
+}
+
+.selectedSeats {
+  margin-top: 20px;
+}
+
+.selectedSeatItem {
+  margin-bottom: 10px;
+  text-align: left;
+}
