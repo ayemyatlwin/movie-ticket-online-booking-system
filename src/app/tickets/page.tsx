@@ -4,6 +4,7 @@ import { RootState } from "@/redux/Store";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Box, Stack, Typography, Paper, Divider } from "@mui/material";
+import moment from "moment";
 
 const TicketPage = () => {
   const {
@@ -62,10 +63,12 @@ const TicketPage = () => {
             )}
           </Typography>
           <Typography variant="subtitle1" textAlign="center">
-            {selectedShowDate?.ShowDate}
+            {moment(selectedShowDate?.ShowDate, "YYYY-MM-DD").format(
+              "DD/MM/YYYY"
+            )}
           </Typography>
           <Typography variant="subtitle1" textAlign="center">
-            {selectedShowTime?.ShowTime}
+            {moment(selectedShowTime?.ShowTime, "HH:mm:ss").format("hh:mm A")}
           </Typography>
           <Paper elevation={2} sx={{ padding: 2 }}>
             <Stack spacing={1}>

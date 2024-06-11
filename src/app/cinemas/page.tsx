@@ -5,103 +5,86 @@ import {
   setSelectedShowDate,
   setSelectedShowTime,
 } from "@/redux/slices/TicketSlice";
-import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/redux/Store";
 import { useSelector } from "react-redux";
-import IShowSchedule from "@/types/ShowSchedule";
 import IShowDates from "@/types/ShowDates";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import BDialog from "@/components/Dialog";
+import styles from "./CinemaListPage.module.css";
+import ScheduleDialog from "@/components/ScheduleDialog";
 
 const CinemaListPage = () => {
   const [showDate, setShowDate] = useState<boolean>(false);
-  const [showTime, setShowTime] = useState<boolean>(false);
   const [availableDates, setAvailableDates] = useState<IShowDates[]>([]);
-  const [availableTimes, setAvailableTimes] = useState<IShowSchedule[]>([]);
-
-  const router = useRouter();
   const dispatch = useDispatch();
-  const {
-    selectedMovie,
-    selectedCinemaRoom,
-    selectedShowDate,
-    selectedShowTime,
-  } = useSelector((state: RootState) => state.TicketSlice);
+  const { selectedMovie } = useSelector(
+    (state: RootState) => state.TicketSlice
+  );
 
   const getShowDate = useCallback(
-    (c: any, m: any, r: any) => {
+    (cinemaId: number, movieId: number, roomId: number) => {
       let s: IShowDates[] = [];
       s = data.movie_show_date
-        .filter((v) => v.CinemaId == c && v.MovieId == m && v.RoomId == r)
-        .map((v) => v);
+        .filter(
+          (v) =>
+            v.CinemaId == cinemaId && v.MovieId == movieId && v.RoomId == roomId
+        )
+        .map((date) => date);
       return s;
     },
     [data]
   );
 
   return (
-    <Stack height="100%" width="100%" alignItems="center" p={2}>
-      <Typography
-        variant="h5"
-        textAlign="center"
-        my={2}
-        color={"#045494"}
-        fontWeight={"bold"}
-      >
-        Choose C Here
+    <Stack className={styles.container}>
+      <Typography variant="h6" className={styles.title}>
+        Choose Cinema for {selectedMovie?.MovieTitle}
       </Typography>
-      <Stack spacing={4} justifyContent="center" alignItems="center">
-        {data.cinema_list.map((c, i) => {
+      <Stack
+        direction={"row"}
+        flexWrap={"wrap"}
+        justifyContent="center"
+        alignItems="center"
+      >
+        {data.cinema_list.map((cinema, index) => {
           return (
-            <Box
-              key={i}
-              sx={{
-                width: "100%",
-                maxWidth: 600,
-                mb: 2,
-                display: "flex",
-                gap: 2,
-              }}
-            >
-              <Typography variant="h6" mt={1} color={"#045494"}>
-                {c.CinemaName} -
-              </Typography>
-              <Stack direction="row" spacing={2} mt={1}>
+            <Box key={index} className={styles.cinemaCard}>
+              <Box className={styles.cinemaHeader}>
+                <Typography variant="h6">{cinema.CinemaName}</Typography>
+              </Box>
+              <Box className={styles.buttonGroup}>
                 {data.cinema_room.map((r, idx) => {
-                  return r.CinemaId == c.CinemaId ? (
+                  return r.CinemaId == cinema.CinemaId ? (
                     <Button
                       key={idx}
                       variant="contained"
-                      sx={{
-                        bgcolor: "#5b92c8",
-                        "&:hover": {
-                          bgcolor: "primary.dark",
-                          color: "white",
-                        },
-                      }}
+                      className={styles.button}
                       onClick={() => {
                         setShowDate(true);
                         dispatch(setSelectedCinemaRoom(r));
-                        const dates = getShowDate(
-                          r.CinemaId,
-                          selectedMovie?.MovieId,
-                          r.RoomId
-                        );
-                        setAvailableDates(dates);
+                        dispatch(setSelectedShowDate(null));
+                        dispatch(setSelectedShowTime(null));
+                        if (selectedMovie) {
+                          const dates = getShowDate(
+                            r.CinemaId,
+                            selectedMovie?.MovieId,
+                            r.RoomId
+                          );
+                          setAvailableDates(dates);
+                        }
                       }}
                     >
                       {r.RoomName}
                     </Button>
                   ) : null;
                 })}
-              </Stack>
+              </Box>
             </Box>
           );
         })}
       </Stack>
-      <BDialog
+      <ScheduleDialog
         open={showDate}
         availableDates={availableDates}
         handleOnClose={() => setShowDate(false)}

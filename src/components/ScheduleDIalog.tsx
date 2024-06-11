@@ -9,7 +9,6 @@ import {
   Button,
   DialogContent,
   FormControl,
-  FormLabel,
   Stack,
   TextField,
   Typography,
@@ -24,6 +23,7 @@ import {
   setSelectedShowTime,
 } from "@/redux/slices/TicketSlice";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -54,7 +54,7 @@ interface Props {
   contentWrapperStyle?: React.CSSProperties | null;
   availableDates: IShowDates[];
 }
-export default function BDialog({
+export default function ScheduleDialog({
   handleOnClose,
   open = false,
   style,
@@ -75,22 +75,18 @@ export default function BDialog({
   } = useSelector((state: RootState) => state.TicketSlice);
   const [availableTimes, setAvailableTimes] = useState<IShowSchedule[]>([]);
 
-  const getShowTimes = useCallback((d: number | null) => {
+  const getShowTimes = useCallback((chosenDateId: number | null) => {
     let times: IShowSchedule[] = [];
     times = data.movie_show_schedule
-      .filter((v) => v.ShowDateId == d)
-      .map((v) => v);
-
-    console.log("TIMES", times);
-
+      .filter((schedule) => schedule.ShowDateId == chosenDateId)
+      .map((time) => time);
     return times;
   }, []);
 
-  const dateOptions = availableDates.map((v) => {
+  const dateOptions = availableDates.map((availableDate) => {
     const schedule = data.movie_show_schedule.find(
-      (f) => f.ShowDateId === v.ShowDateId
+      (date) => date.ShowDateId === availableDate.ShowDateId
     );
-
     return schedule ? schedule : null;
   });
 
@@ -121,39 +117,46 @@ export default function BDialog({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "20px",
+            paddingBottom: "20px",
           }}
         >
-          <Stack
-            direction="row"
-            justifyContent="center"
-            p={1}
-            alignItems="center"
-            mb={2}
-          >
-            <Typography variant="h6" align="center" color="primary">
+          <Stack justifyContent="center" p={1} alignItems="center" mb={2}>
+            <Typography
+              variant="h6"
+              align="center"
+              color="#045494"
+              fontWeight={"bold"}
+            >
+              Choose date and time for <br /> {selectedMovie?.MovieTitle},
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="#045494"
+              fontWeight={"bold"}
+            >
+              in{" "}
               {
                 data.cinema_list.find(
-                  (f) => f.CinemaId === selectedCinemaRoom?.CinemaId
+                  (cinema) => cinema.CinemaId === selectedCinemaRoom?.CinemaId
                 )?.CinemaName
               }{" "}
-              - Room {selectedCinemaRoom?.RoomNumber}
+              {`(Room ${selectedCinemaRoom?.RoomNumber})`}
             </Typography>
           </Stack>
           <DialogContent
             dividers={true}
             style={{ width: "100%", textAlign: "center" }}
           >
-            <Typography variant="body1" gutterBottom>
-              Choose Date and Time
-            </Typography>
-            <Stack spacing={2} mb={2} alignItems="center">
+            <Stack spacing={2} alignItems="center">
               <FormControl sx={{ width: "100%", maxWidth: 300 }}>
                 <Autocomplete
                   options={dateOptions}
                   renderOption={(props, option) => (
                     <li {...props} key={option?.ShowId}>
-                      {option?.ShowDate}
+                      {moment(option?.ShowDate, "YYYY-MM-DD").format(
+                        "DD/MM/YYYY"
+                      )}
                     </li>
                   )}
                   value={selectedShowDate}
@@ -165,7 +168,11 @@ export default function BDialog({
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Please choose date" />
                   )}
-                  getOptionLabel={(option) => option?.ShowDate || ""}
+                  getOptionLabel={(option) =>
+                    moment(option?.ShowDate, "YYYY-MM-DD").format(
+                      "DD/MM/YYYY"
+                    ) || ""
+                  }
                   sx={{ width: "100%" }}
                 />
               </FormControl>
@@ -174,7 +181,7 @@ export default function BDialog({
                   options={availableTimes}
                   renderOption={(props, option) => (
                     <li {...props} key={option?.ShowId}>
-                      {option?.ShowTime}
+                      {moment(option?.ShowTime, "HH:mm:ss").format("hh:mm A")}
                     </li>
                   )}
                   value={selectedShowTime}
@@ -182,7 +189,9 @@ export default function BDialog({
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Please choose time" />
                   )}
-                  getOptionLabel={(option) => option?.ShowTime || ""}
+                  getOptionLabel={(option) =>
+                    moment(option?.ShowTime, "HH:mm:ss").format("hh:mm A") || ""
+                  }
                   sx={{ width: "100%" }}
                 />
               </FormControl>
@@ -197,9 +206,6 @@ export default function BDialog({
           >
             <Button
               onClick={() => {
-                console.log(
-                  ` ${selectedMovie?.MovieTitle} ${selectedCinemaRoom?.RoomName} ${selectedShowDate?.ShowDate} ${selectedShowTime?.ShowTime}`
-                );
                 handleClose();
                 router.push("./seats");
               }}
@@ -212,6 +218,7 @@ export default function BDialog({
                   color: "white",
                 },
               }}
+              disabled={selectedShowTime && selectedShowDate ? false : true}
             >
               Done
             </Button>

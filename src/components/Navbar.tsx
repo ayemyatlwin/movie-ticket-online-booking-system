@@ -1,7 +1,10 @@
 import * as React from "react";
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
+import { resetData } from "@/redux/slices/TicketSlice";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const router = useRouter();
   return (
     <Stack
       width={"100%"}
@@ -11,16 +14,20 @@ const Navbar = () => {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <Typography
-        sx={{
-          textTransform: "UpperCase",
+      <p
+        style={{
           fontWeight: "bold",
           color: "#045494",
           fontSize: "22px",
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          resetData();
+          router.push("/");
         }}
       >
-        Get Tickets here
-      </Typography>
+        Get Tickets Here
+      </p>
     </Stack>
   );
 };
