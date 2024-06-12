@@ -1,27 +1,17 @@
 import * as React from "react";
-import { Stack, Typography } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
+import HeaderText from "./Text/HeaderText";
 
 const Navbar = () => {
   return (
-    <Stack
-      width={"100%"}
-      height={"10vh"}
-      bgcolor={"#a7c5e1"}
-      direction={"row"}
-      justifyContent={"center"}
-      alignItems={"center"}
+    <AppBar
+      position="static"
+      sx={{ bgcolor: "#a7c5e1", height: "10vh", boxShadow: 4 }}
     >
-      <Typography
-        sx={{
-          textTransform: "UpperCase",
-          fontWeight: "bold",
-          color: "#045494",
-          fontSize: "22px",
-        }}
-      >
-        Get Tickets here
-      </Typography>
-    </Stack>
+      <Toolbar>
+        <HeaderText text="Get Tickets Here" />
+      </Toolbar>
+    </AppBar>
   );
 };
 
