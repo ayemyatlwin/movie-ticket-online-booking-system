@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import IShowDates from "@/types/ShowDates";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import styles from "./CinemaListPage.module.css";
-import ScheduleDialog from "@/components/ScheduleDialog";
+import ScheduleDialog from "@/components/ScheduleDIalog";
 
 const CinemaListPage = () => {
   const [showDate, setShowDate] = useState<boolean>(false);
