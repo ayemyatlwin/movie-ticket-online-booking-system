@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/Store";
-import data from "@/constants";
 import IShowSchedule from "@/types/ShowSchedule";
 import IShowDates from "@/types/ShowDates";
 import {
@@ -24,6 +23,13 @@ import {
 } from "@/redux/slices/TicketSlice";
 import { useRouter } from "next/navigation";
 import moment from "moment";
+import { getList } from "@/API";
+import useSWR from "swr";
+
+const fetchMovieScheduleList = async () => {
+  const response = await getList();
+  return response.data.Tbl_MovieSchedule;
+};
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -67,29 +73,39 @@ export default function ScheduleDialog({
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const { data: movieScheduleList } = useSWR<IShowSchedule[]>(
+    "MovieSchedule",
+    fetchMovieScheduleList
+  );
+
   const {
     selectedMovie,
     selectedCinemaRoom,
     selectedShowDate,
     selectedShowTime,
+    selectedCinemaName,
   } = useSelector((state: RootState) => state.TicketSlice);
   const [availableTimes, setAvailableTimes] = useState<IShowSchedule[]>([]);
 
-  const getShowTimes = useCallback((chosenDateId: number | null) => {
-    let times: IShowSchedule[] = [];
-    times = data.movie_show_schedule
-      .filter((schedule) => schedule.ShowDateId == chosenDateId)
-      .map((time) => time);
-    return times;
-  }, []);
+  const getShowTimes = useCallback(
+    (chosenDateId: number | null) => {
+      let times: IShowSchedule[] = [];
+      if (movieScheduleList) {
+        times = movieScheduleList
+          ?.filter((schedule) => schedule.ShowDateId == chosenDateId)
+          .map((time) => time);
+      }
+      return times;
+    },
+    [movieScheduleList]
+  );
 
   const dateOptions = availableDates.map((availableDate) => {
-    const schedule = data.movie_show_schedule.find(
+    const schedule = movieScheduleList?.find(
       (date) => date.ShowDateId === availableDate.ShowDateId
     );
     return schedule ? schedule : null;
   });
-
   return (
     <React.Fragment>
       <BootstrapDialog
@@ -135,12 +151,7 @@ export default function ScheduleDialog({
               color="#045494"
               fontWeight={"bold"}
             >
-              in{" "}
-              {
-                data.cinema_list.find(
-                  (cinema) => cinema.CinemaId === selectedCinemaRoom?.CinemaId
-                )?.CinemaName
-              }{" "}
+              in {selectedCinemaName?.CinemaName}{" "}
               {`(Room ${selectedCinemaRoom?.RoomNumber})`}
             </Typography>
           </Stack>
@@ -154,9 +165,7 @@ export default function ScheduleDialog({
                   options={dateOptions}
                   renderOption={(props, option) => (
                     <li {...props} key={option?.ShowId}>
-                      {moment(option?.ShowDate, "YYYY-MM-DD").format(
-                        "DD/MM/YYYY"
-                      )}
+                      {moment(option?.ShowDateTime).format("DD/MM/YYYY")}
                     </li>
                   )}
                   value={selectedShowDate}
@@ -169,9 +178,7 @@ export default function ScheduleDialog({
                     <TextField {...params} placeholder="Please choose date" />
                   )}
                   getOptionLabel={(option) =>
-                    moment(option?.ShowDate, "YYYY-MM-DD").format(
-                      "DD/MM/YYYY"
-                    ) || ""
+                    moment(option?.ShowDateTime).format("DD/MM/YYYY") || ""
                   }
                   sx={{ width: "100%" }}
                 />
@@ -181,7 +188,7 @@ export default function ScheduleDialog({
                   options={availableTimes}
                   renderOption={(props, option) => (
                     <li {...props} key={option?.ShowId}>
-                      {moment(option?.ShowTime, "HH:mm:ss").format("hh:mm A")}
+                      {moment(option?.ShowDateTime).format("hh:mm A")}
                     </li>
                   )}
                   value={selectedShowTime}
@@ -190,7 +197,7 @@ export default function ScheduleDialog({
                     <TextField {...params} placeholder="Please choose time" />
                   )}
                   getOptionLabel={(option) =>
-                    moment(option?.ShowTime, "HH:mm:ss").format("hh:mm A") || ""
+                    moment(option?.ShowDateTime).format("hh:mm A") || ""
                   }
                   sx={{ width: "100%" }}
                 />

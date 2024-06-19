@@ -1,6 +1,6 @@
 "use client";
-import data from "@/constants";
 import {
+  setSelectedCinemaName,
   setSelectedCinemaRoom,
   setSelectedShowDate,
   setSelectedShowTime,
@@ -13,28 +13,70 @@ import IShowDates from "@/types/ShowDates";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import styles from "./CinemaListPage.module.css";
 import ScheduleDialog from "@/components/ScheduleDIalog";
+import { getList } from "@/API";
+import useSWR from "swr";
+import ICinemaName from "@/types/CinemaName";
+import ICinemaRoom from "@/types/CinemaRoom";
+
+const fetchCinemaList = async () => {
+  const response = await getList();
+  return response.data.Tbl_CinemaList;
+};
+const fetchCinemaRoomList = async () => {
+  const response = await getList();
+  return response.data.Tbl_CinemaRoom;
+};
+
+const fetchMovieShowDateList = async () => {
+  const response = await getList();
+  return response.data.Tbl_MovieShowDate;
+};
 
 const CinemaListPage = () => {
   const [showDate, setShowDate] = useState<boolean>(false);
   const [availableDates, setAvailableDates] = useState<IShowDates[]>([]);
   const dispatch = useDispatch();
+  const { data: cinemaList } = useSWR<ICinemaName[]>(
+    "cinemaList",
+    fetchCinemaList
+  );
+  const { data: cinemaRoomList } = useSWR<ICinemaRoom[]>(
+    "cinemaRoom",
+    fetchCinemaRoomList
+  );
+  const { data: movieShowDateList } = useSWR<IShowDates[]>(
+    "movieShowDates",
+    fetchMovieShowDateList
+  );
   const { selectedMovie } = useSelector(
     (state: RootState) => state.TicketSlice
   );
 
   const getShowDate = useCallback(
-    (cinemaId: number, movieId: number, roomId: number) => {
+    (cinemaId: number, roomId: number) => {
       let s: IShowDates[] = [];
-      s = data.movie_show_date
-        .filter(
-          (v) =>
-            v.CinemaId == cinemaId && v.MovieId == movieId && v.RoomId == roomId
-        )
-        .map((date) => date);
+      if (movieShowDateList) {
+        s = movieShowDateList
+          ?.filter(
+            (v) =>
+              v.CinemaId == cinemaId &&
+              v.RoomId == roomId &&
+              v.MovieId == selectedMovie?.MovieId
+          )
+          .map((date) => date);
+      }
       return s;
     },
-    [data]
+    [movieShowDateList]
   );
+
+  const getRoomIdListOfSelectedMovie = movieShowDateList
+    ?.filter((v) => v.MovieId == selectedMovie?.MovieId)
+    .map((v) => v.RoomId);
+
+  const getCinemaIdListOfSelectedMovie = movieShowDateList
+    ?.filter((v) => v.MovieId == selectedMovie?.MovieId)
+    .map((v) => v.CinemaId);
 
   return (
     <Stack className={styles.container}>
@@ -47,30 +89,28 @@ const CinemaListPage = () => {
         justifyContent="center"
         alignItems="center"
       >
-        {data.cinema_list.map((cinema, index) => {
-          return (
+        {cinemaList?.map((cinema: ICinemaName, index: number) => {
+          return getCinemaIdListOfSelectedMovie?.includes(cinema.CinemaId) ? (
             <Box key={index} className={styles.cinemaCard}>
               <Box className={styles.cinemaHeader}>
                 <Typography variant="h6">{cinema.CinemaName}</Typography>
               </Box>
               <Box className={styles.buttonGroup}>
-                {data.cinema_room.map((r, idx) => {
-                  return r.CinemaId == cinema.CinemaId ? (
+                {cinemaRoomList?.map((r, idx) => {
+                  return r?.CinemaId == cinema?.CinemaId &&
+                    getRoomIdListOfSelectedMovie?.includes(r.RoomId) ? (
                     <Button
                       key={idx}
                       variant="contained"
                       className={styles.button}
                       onClick={() => {
                         setShowDate(true);
+                        dispatch(setSelectedCinemaName(cinema));
                         dispatch(setSelectedCinemaRoom(r));
                         dispatch(setSelectedShowDate(null));
                         dispatch(setSelectedShowTime(null));
                         if (selectedMovie) {
-                          const dates = getShowDate(
-                            r.CinemaId,
-                            selectedMovie?.MovieId,
-                            r.RoomId
-                          );
+                          const dates = getShowDate(r.CinemaId, r.RoomId);
                           setAvailableDates(dates);
                         }
                       }}
@@ -81,7 +121,7 @@ const CinemaListPage = () => {
                 })}
               </Box>
             </Box>
-          );
+          ) : null;
         })}
       </Stack>
       <ScheduleDialog

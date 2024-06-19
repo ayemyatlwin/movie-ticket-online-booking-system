@@ -1,10 +1,24 @@
 "use client";
-import data from "@/constants";
 import { RootState } from "@/redux/Store";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Box, Stack, Typography, Paper, Divider } from "@mui/material";
 import moment from "moment";
+import { getList } from "@/API";
+import useSWR from "swr";
+import ICinemaName from "@/types/CinemaName";
+import ISeatPrice from "@/types/SeatPrice";
+import styles from "./TicketPage.module.css";
+
+const fetchCinemaList = async () => {
+  const response = await getList();
+  return response.data.Tbl_CinemaList;
+};
+
+const fetchSeatPriceList = async () => {
+  const response = await getList();
+  return response.data.Tbl_SeatPrice;
+};
 
 const TicketPage = () => {
   const {
@@ -14,15 +28,21 @@ const TicketPage = () => {
     selectedShowTime,
     selectedSeat,
   } = useSelector((state: RootState) => state.TicketSlice);
-  console.log("selectedSeat", selectedSeat);
+  const { data: seatPriceLists } = useSWR<ISeatPrice[]>(
+    "seatPriceList",
+    fetchSeatPriceList
+  );
+
+  const { data: cinemaList } = useSWR<ICinemaName[]>(
+    "cinemaList",
+    fetchCinemaList
+  );
 
   const getSeatPrice = (rowName: string): number => {
-    const seatPrice = data?.seat_price.find(
+    const seatPrice = seatPriceLists?.find(
       (price) =>
         price.RowName === rowName && price.RoomId === selectedCinemaRoom?.RoomId
     );
-    console.log("seatPrice", seatPrice);
-
     return seatPrice ? Number(seatPrice.SeatPrice) : 0;
   };
 
@@ -31,69 +51,63 @@ const TicketPage = () => {
   }, 0);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 5,
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: 600,
-          padding: 3,
-          backgroundColor: "#f9f9f9",
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
+    <Box className={styles.boxContainer}>
+      <Box className={styles.innerBox}>
         <Stack spacing={2}>
-          <Typography variant="h6" textAlign="center">
-            {selectedMovie?.MovieTitle}
+          <Typography className={styles.ticketNumber}>
+            {Math.floor(Math.random() * 100000)}
           </Typography>
-          <Typography
-            variant="h6"
-            component="h2"
-            textAlign="center"
-            color="textSecondary"
-          >
-            {data.cinema_list.map((v) =>
-              v.CinemaId === selectedCinemaRoom?.CinemaId ? v.CinemaName : ""
-            )}
-          </Typography>
-          <Typography variant="subtitle1" textAlign="center">
-            {moment(selectedShowDate?.ShowDate, "YYYY-MM-DD").format(
-              "DD/MM/YYYY"
-            )}
-          </Typography>
-          <Typography variant="subtitle1" textAlign="center">
-            {moment(selectedShowTime?.ShowTime, "HH:mm:ss").format("hh:mm A")}
-          </Typography>
-          <Paper elevation={2} sx={{ padding: 2 }}>
-            <Stack spacing={1}>
-              {selectedSeat.map((v) => (
-                <Box
-                  key={v.SeatId}
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="body1" fontWeight="bold">
+          <Typography className={styles.title}>Get Tickets Here</Typography>
+          <Typography className={styles.subtitle}>Entrance Ticket</Typography>
+          <Stack>
+            <Typography className={styles.movieTitle}>
+              {selectedMovie?.MovieTitle}
+            </Typography>
+            <Typography className={styles.cinemaDetails}>
+              {
+                cinemaList?.find(
+                  (cinema) => cinema.CinemaId == selectedCinemaRoom?.CinemaId
+                )?.CinemaName
+              }{" "}
+              - {selectedCinemaRoom?.RoomName}
+            </Typography>
+          </Stack>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Typography>
+              {moment(selectedShowDate?.ShowDateTime).format("DD/MM/YYYY")}
+            </Typography>
+            <Typography>
+              {moment(selectedShowTime?.ShowDateTime).format("hh:mm A")}
+            </Typography>
+          </Stack>
+          <Paper elevation={2} style={{ padding: 16 }}>
+            <Stack direction={"row"} width={"100%"} my={1}>
+              <Stack width={"35%"}>
+                <Typography fontWeight="bold">Seats</Typography>
+              </Stack>
+
+              <Stack
+                width="65%"
+                direction={"row"}
+                justifyContent={"flex-end"}
+                flexWrap={"wrap"}
+              >
+                {selectedSeat.map((v) => (
+                  <Typography key={v.SeatId}>
                     {v.RowName}
                     {v.SeatNo}
+                    {selectedSeat &&
+                    selectedSeat[selectedSeat?.length - 1]?.SeatId == v.SeatId
+                      ? ""
+                      : ", "}
                   </Typography>
-                  <Typography variant="body1" color="textSecondary">
-                    ${getSeatPrice(v.RowName)}
-                  </Typography>
-                </Box>
-              ))}
-              <Divider />
-              <Box display="flex" justifyContent="flex-end">
-                <Typography variant="h6" fontWeight="bold">
-                  Total : ${totalVoucher}
-                </Typography>
-              </Box>
+                ))}
+              </Stack>
             </Stack>
+            <Divider />
+            <Box className={styles.totalBox}>
+              <Typography variant="h6">Total : {totalVoucher} Kyats</Typography>
+            </Box>
           </Paper>
         </Stack>
       </Box>
