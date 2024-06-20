@@ -1,0 +1,55 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.title {
+  text-align: center;
+  margin: 16px 0;
+  color: #045494;
+  font-weight: bold;
+}
+
+.cinemaCard {
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  transition: transform 0.3s;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cinemaCard:hover {
+  transform: translateY(-5px);
+}
+
+.cinemaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #045494;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  justify-self: flex-start;
+}
+
+.button {
+  background-color: #5b92c8;
+}
+
+.button:hover {
+  opacity: 0.5;
+  transition: transform 0.3s;
+}
