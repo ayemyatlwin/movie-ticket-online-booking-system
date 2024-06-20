@@ -56,6 +56,36 @@ const data = {
       MovieTitle: "Spider-Man: Across the Spider-Verse",
       MoviePhoto: "/images/spider_man.jpg",
     },
+    {
+      MovieId: 1,
+      MovieTitle: "Tom and Jerry",
+      MoviePhoto: "/images/tom_and_jerry.jpg",
+    },
+    {
+      MovieId: 2,
+      MovieTitle: "Pokémon: Detective Pikachu",
+      MoviePhoto: "/images/pokemon.jpg",
+    },
+    {
+      MovieId: 3,
+      MovieTitle: "Spider-Man: Across the Spider-Verse",
+      MoviePhoto: "/images/spider_man.jpg",
+    },
+    {
+      MovieId: 1,
+      MovieTitle: "Tom and Jerry",
+      MoviePhoto: "/images/tom_and_jerry.jpg",
+    },
+    {
+      MovieId: 2,
+      MovieTitle: "Pokémon: Detective Pikachu",
+      MoviePhoto: "/images/pokemon.jpg",
+    },
+    {
+      MovieId: 3,
+      MovieTitle: "Spider-Man: Across the Spider-Verse",
+      MoviePhoto: "/images/spider_man.jpg",
+    },
   ],
   seat_lists: [
     {

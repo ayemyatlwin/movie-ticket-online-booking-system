@@ -8,7 +8,7 @@ type Props = {
 
 function HeaderText({ text, onClick }: Props) {
   return (
-    <div onClick={() => onClick && onClick()}>
+    <div style={{ cursor: "pointer" }} onClick={() => onClick && onClick()}>
       <Typography
         sx={{
           textTransform: "uppercase",

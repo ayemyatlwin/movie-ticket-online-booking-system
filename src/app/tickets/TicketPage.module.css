@@ -1,0 +1,52 @@
+.boxContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.innerBox {
+  width: 400px;
+  padding: 24px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.ticketNumber {
+  color: #757575;
+  text-align: end;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.subtitle {
+  color: #757575;
+  text-align: center;
+}
+
+.movieTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.cinemaDetails {
+  color: #757575;
+}
+
+.seatNumbers {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.totalBox {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.7rem;
+}
