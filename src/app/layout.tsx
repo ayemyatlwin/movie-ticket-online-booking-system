@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Layout from "@/components/Layout";
 import StoreProvider from "./StoreProvider";
-
+import { Layout } from "@/components";
+import ThemeRegistry from "./ThemeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
-          <Layout>{children}</Layout>
+          <ThemeRegistry options={{ key: "mui" }}>
+            <Layout>{children}</Layout>
+          </ThemeRegistry>
         </StoreProvider>
       </body>
     </html>

@@ -1,21 +1,24 @@
+import Colors from "@/styles/Colors";
 import { Typography } from "@mui/material";
 import React from "react";
 
 type Props = {
   text?: string;
   onClick?: () => void;
+  style?: React.CSSProperties;
 };
 
-function HeaderText({ text, onClick }: Props) {
+function HeaderText({ text, onClick, style }: Props) {
   return (
     <div style={{ cursor: "pointer" }} onClick={() => onClick && onClick()}>
       <Typography
-        sx={{
+        style={{
           textTransform: "uppercase",
           fontWeight: "bold",
-          color: "#045494",
+          color: Colors.textColor,
           fontSize: "24px",
-          letterSpacing: "1.5px",
+          letterSpacing: "1px",
+          ...style,
         }}
       >
         {text}

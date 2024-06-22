@@ -11,7 +11,6 @@ import ISeatPrice from "@/types/SeatPrice";
 import useSWR from "swr";
 import Image from "next/image";
 import {
-  Button,
   IconButton,
   Stack,
   Table,
@@ -19,7 +18,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import Colors from "@/styles/Colors";
+import { CancelButton, HeaderText, ProceedButton } from "@/components";
 
 const fetchSeatList = async () => {
   const response = await getList();
@@ -91,17 +93,17 @@ const SeatListPage = () => {
           marginBottom: "15px",
         }}
       >
-        <h1
+        <Stack
           style={{
-            borderTop: "1px solid black",
-            borderBottom: "1px solid black",
+            borderTop: `1px solid ${Colors.borderScreen}`,
+            borderBottom: `1px solid ${Colors.borderScreen}`,
             padding: "5px",
             width: "300px",
             textAlign: "center",
           }}
         >
-          Screen
-        </h1>
+          <HeaderText text="Screen" />
+        </Stack>
       </div>
       <div style={{ textAlign: "center" }}>
         <Image width={1000} height={60} alt="tv" src={"/images/tv.png"} />
@@ -109,17 +111,17 @@ const SeatListPage = () => {
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "15px" }}
       >
-        <h1
+        <Stack
           style={{
-            borderTop: "1px solid black",
-            borderBottom: "1px solid black",
+            borderTop: `1px solid ${Colors.borderScreen}`,
+            borderBottom: `1px solid ${Colors.borderScreen}`,
             padding: "5px",
             width: "300px",
             textAlign: "center",
           }}
         >
-          Silver Plus
-        </h1>
+          <HeaderText text="Silver Plus" />
+        </Stack>
       </div>
       {sortedRowNames.map((rowName) => (
         <div key={rowName}>
@@ -159,7 +161,13 @@ const SeatListPage = () => {
                         />
                       )}
 
-                      <div className={styles.seatText}>
+                      <div
+                        className={
+                          selectedSeat.includes(seat)
+                            ? styles.selectedSeatText
+                            : styles.seatText
+                        }
+                      >
                         {`${seat.RowName}${seat.SeatNo}`}
                       </div>
                     </>
@@ -179,20 +187,33 @@ const SeatListPage = () => {
               <TableHead>
                 <TableRow>
                   <TableCell width={"20%"} align="center">
-                    Selected Seats
+                    <Typography fontWeight={"bold"} color={Colors.textColor}>
+                      Selected Seats
+                    </Typography>
                   </TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell align="right">
+                    <Typography fontWeight={"bold"} color={Colors.textColor}>
+                      Price
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography fontWeight={"bold"} color={Colors.textColor}>
+                      Actions
+                    </Typography>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {selectedSeat?.map((s) => {
                   return (
                     <TableRow key={s.SeatId}>
-                      <TableCell align="center">
+                      <TableCell
+                        align="center"
+                        sx={{ color: Colors.textColor }}
+                      >
                         {s.RowName} {s.SeatNo}
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ color: Colors.textColor }}>
                         {
                           seatPriceLists?.find(
                             (p) =>
@@ -214,8 +235,10 @@ const SeatListPage = () => {
                   );
                 })}
                 <TableRow>
-                  <TableCell align="center">TOTAL</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center" sx={{ color: Colors.textColor }}>
+                    TOTAL
+                  </TableCell>
+                  <TableCell align="right" sx={{ color: Colors.textColor }}>
                     {" "}
                     {selectedSeat.reduce((total, seat) => {
                       const seatPrice =
@@ -238,8 +261,18 @@ const SeatListPage = () => {
             justifyContent={"flex-end"}
             px={4}
           >
-            <Button onClick={() => handleOnClickClear()}>Clear</Button>
-            <Button onClick={() => handleOnClickProceed()}>Proceed</Button>
+            <CancelButton
+              buttonText="Clear"
+              onClick={() => handleOnClickClear()}
+              style={{
+                color: Colors.textColor,
+                borderColor: Colors.textColor,
+              }}
+            />
+            <ProceedButton
+              buttonText="Proceed"
+              onClick={() => handleOnClickProceed()}
+            />
           </Stack>
         </>
       ) : null}

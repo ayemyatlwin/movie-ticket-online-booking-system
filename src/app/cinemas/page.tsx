@@ -12,11 +12,12 @@ import { useSelector } from "react-redux";
 import IShowDates from "@/types/ShowDates";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import styles from "./CinemaListPage.module.css";
-import ScheduleDialog from "@/components/ScheduleDIalog";
 import { getList } from "@/API";
 import useSWR from "swr";
 import ICinemaName from "@/types/CinemaName";
 import ICinemaRoom from "@/types/CinemaRoom";
+import { HeaderText, ProceedButton, ScheduleDialog } from "@/components";
+import Colors from "@/styles/Colors";
 
 const fetchCinemaList = async () => {
   const response = await getList();
@@ -80,9 +81,7 @@ const CinemaListPage = () => {
 
   return (
     <Stack className={styles.container}>
-      <Typography variant="h6" className={styles.title}>
-        Choose Cinema for {selectedMovie?.MovieTitle}
-      </Typography>
+      <HeaderText text={`Choose Cinema for ${selectedMovie?.MovieTitle}`} />
       <Stack
         direction={"row"}
         flexWrap={"wrap"}
@@ -93,16 +92,15 @@ const CinemaListPage = () => {
           return getCinemaIdListOfSelectedMovie?.includes(cinema.CinemaId) ? (
             <Box key={index} className={styles.cinemaCard}>
               <Box className={styles.cinemaHeader}>
-                <Typography variant="h6">{cinema.CinemaName}</Typography>
+                <Typography variant="h6" color={"primary"}>
+                  {cinema.CinemaName}
+                </Typography>
               </Box>
               <Box className={styles.buttonGroup}>
                 {cinemaRoomList?.map((r, idx) => {
                   return r?.CinemaId == cinema?.CinemaId &&
                     getRoomIdListOfSelectedMovie?.includes(r.RoomId) ? (
                     <Button
-                      key={idx}
-                      variant="contained"
-                      className={styles.button}
                       onClick={() => {
                         setShowDate(true);
                         dispatch(setSelectedCinemaName(cinema));
@@ -113,6 +111,18 @@ const CinemaListPage = () => {
                           const dates = getShowDate(r.CinemaId, r.RoomId);
                           setAvailableDates(dates);
                         }
+                      }}
+                      variant="outlined"
+                      sx={{
+                        color: Colors.textColor,
+                        minWidth: 150,
+                        borderColor: Colors.textColor,
+                        textTransform: "uppercase",
+                        borderRadius: 2,
+                        "&:hover": {
+                          color: Colors.textColor,
+                          borderColor: Colors.navbarBgColor,
+                        },
                       }}
                     >
                       {r.RoomName}

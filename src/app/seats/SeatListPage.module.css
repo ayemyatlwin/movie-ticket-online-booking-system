@@ -13,7 +13,7 @@
 }
 
 .seat:hover .seatText {
-  color: #e5eef6;
+  color: #696969;
   transition: 0.5s;
 }
 
@@ -29,9 +29,19 @@
   transform: translate(-50%, -50%);
   font-size: 0.8rem;
   font-weight: bold;
-  color: #a7c5e1;
+  color: #ffd700;
   padding: 2rem;
   text-shadow: 0 0 5px black;
+}
+.selectedSeatText {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  padding: 2rem;
 }
 
 .emptySeat {
