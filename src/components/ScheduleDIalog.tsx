@@ -124,7 +124,7 @@ export default function ScheduleDialog({
             minHeight: 300,
             borderRadius: 3,
             p: 3,
-            bgcolor: "#f5f5f5",
+            bgcolor: Colors.lightColor,
           },
         }}
       >
