@@ -19,19 +19,12 @@
 }
 
 .title {
-  font-size: 1.25rem;
-  font-weight: 700;
   text-align: center;
 }
 
 .subtitle {
   color: #757575;
   text-align: center;
-}
-
-.movieTitle {
-  font-size: 1.25rem;
-  font-weight: bold;
 }
 
 .cinemaDetails {

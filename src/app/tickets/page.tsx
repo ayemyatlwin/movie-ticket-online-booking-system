@@ -57,10 +57,12 @@ const TicketPage = () => {
           <Typography className={styles.ticketNumber}>
             {Math.floor(Math.random() * 100000)}
           </Typography>
-          <Typography className={styles.title}>Get Tickets Here</Typography>
+          <Typography fontWeight="bold" className={styles.title}>
+            Get Tickets Here
+          </Typography>
           <Typography className={styles.subtitle}>Entrance Ticket</Typography>
           <Stack>
-            <Typography className={styles.movieTitle}>
+            <Typography fontWeight="bold">
               {selectedMovie?.MovieTitle}
             </Typography>
             <Typography className={styles.cinemaDetails}>
@@ -106,7 +108,9 @@ const TicketPage = () => {
             </Stack>
             <Divider />
             <Box className={styles.totalBox}>
-              <Typography variant="h6">Total : {totalVoucher} Kyats</Typography>
+              <Typography variant="h6" fontWeight="bold">
+                Total : {totalVoucher} Kyats
+              </Typography>
             </Box>
           </Paper>
         </Stack>
