@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import styles from "./MovieListPage.module.css";
 import { getList } from "@/API";
 import useSWR from "swr";
+import Colors from "@/styles/Colors";
 
 const fetchMovieList = async () => {
   const response = await getList();
@@ -35,6 +36,7 @@ const MovieListPage = () => {
   const [searchedText, setSearchedText] = useState<string>("");
   const deferredSearchText = useDeferredValue(searchedText);
   const [movieCardList, setMovieCardList] = useState<IMovies[]>([]);
+
   useEffect(() => {
     if (movieList) {
       let searchedResult = movieList;
@@ -81,9 +83,7 @@ const MovieListPage = () => {
                 width={300}
                 height={250}
               />
-              <Stack className={styles.movieTitle}>
-                <Typography color={"#5b92c8"}>{movie.MovieTitle}</Typography>
-              </Stack>
+              <Stack className={styles.movieTitle}>{movie.MovieTitle}</Stack>
             </Stack>
           ))}
         </>
@@ -92,20 +92,33 @@ const MovieListPage = () => {
   }, [movieCardList, page]);
   return (
     <Container>
-      <Stack direction={"row"} mb={1} justifyContent={"flex-end"}>
-        <FormControl>
-          <FormLabel>Search by movie name</FormLabel>
-          <OutlinedInput
-            sx={{ width: 300 }}
-            size="small"
-            type="search"
-            onChange={(e) => {
-              setSearchedText(e.target.value);
-              setPage(1);
-            }}
-          />
-        </FormControl>
-      </Stack>
+      {movieList ? (
+        <Stack
+          direction={"row"}
+          mb={1}
+          display={"flex"}
+          justifyContent={"flex-end"}
+        >
+          <FormControl>
+            <FormLabel style={{ color: Colors.textColor }}>
+              Search by movie name
+            </FormLabel>
+            <OutlinedInput
+              sx={{
+                width: 300,
+                color: Colors.textColor,
+                border: `1px solid ${Colors.textColor} `,
+              }}
+              size="small"
+              type="search"
+              onChange={(e) => {
+                setSearchedText(e.target.value);
+                setPage(1);
+              }}
+            />
+          </FormControl>
+        </Stack>
+      ) : null}
       <Stack direction="row" justifyContent="center" flexWrap="wrap">
         {renderList}
       </Stack>
@@ -114,9 +127,10 @@ const MovieListPage = () => {
           <Pagination
             count={movieCardList.length / 5}
             page={page}
+            color="primary"
             shape="rounded"
             variant="outlined"
-            sx={{ mt: 1 }}
+            sx={{ mt: 2 }}
             onChange={(e, _page) => setPage(_page)}
           />
         ) : null}
