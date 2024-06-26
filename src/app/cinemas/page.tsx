@@ -16,7 +16,7 @@ import { getList } from "@/API";
 import useSWR from "swr";
 import ICinemaName from "@/types/CinemaName";
 import ICinemaRoom from "@/types/CinemaRoom";
-import { HeaderText, ProceedButton, ScheduleDialog } from "@/components";
+import { ScheduleDialog, HeaderText } from "@/components";
 import Colors from "@/styles/Colors";
 
 const fetchCinemaList = async () => {
