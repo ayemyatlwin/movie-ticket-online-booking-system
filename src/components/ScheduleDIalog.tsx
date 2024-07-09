@@ -6,7 +6,6 @@ import { TransitionProps } from "@mui/material/transitions";
 import { styled } from "@mui/material/styles";
 import {
   Autocomplete,
-  Button,
   DialogContent,
   FormControl,
   Stack,
@@ -25,6 +24,8 @@ import { useRouter } from "next/navigation";
 import moment from "moment";
 import { getList } from "@/API";
 import useSWR from "swr";
+import Colors from "@/styles/Colors";
+import { CancelButton, ProceedButton } from "./Button";
 
 const fetchMovieScheduleList = async () => {
   const response = await getList();
@@ -123,7 +124,7 @@ export default function ScheduleDialog({
             minHeight: 300,
             borderRadius: 3,
             p: 3,
-            bgcolor: "background.paper",
+            bgcolor: Colors.lightColor,
           },
         }}
       >
@@ -140,19 +141,19 @@ export default function ScheduleDialog({
             <Typography
               variant="h6"
               align="center"
-              color="#045494"
               fontWeight={"bold"}
+              color={Colors.mainBgColor}
             >
               Choose date and time for <br /> {selectedMovie?.MovieTitle},
             </Typography>
             <Typography
               variant="h6"
               align="center"
-              color="#045494"
+              color={Colors.mainBgColor}
               fontWeight={"bold"}
             >
               in {selectedCinemaName?.CinemaName}{" "}
-              {`(Room ${selectedCinemaRoom?.RoomNumber})`}
+              {`( ${selectedCinemaRoom?.RoomName})`}
             </Typography>
           </Stack>
           <DialogContent
@@ -211,42 +212,22 @@ export default function ScheduleDialog({
             spacing={3}
             mt={3}
           >
-            <Button
+            <ProceedButton
+              buttonText="Done"
               onClick={() => {
                 handleClose();
                 router.push("./seats");
               }}
-              variant="contained"
-              sx={{
-                bgcolor: "#5b92c8",
-                minWidth: 180,
-                "&:hover": {
-                  bgcolor: "primary.dark",
-                  color: "white",
-                },
-              }}
               disabled={selectedShowTime && selectedShowDate ? false : true}
-            >
-              Done
-            </Button>
-            <Button
-              variant="contained"
+            />
+
+            <CancelButton
               onClick={() => {
                 handleClose();
                 setSelectedShowDate(null);
                 setSelectedShowTime(null);
               }}
-              sx={{
-                bgcolor: "#5b92c8",
-                minWidth: 180,
-                "&:hover": {
-                  bgcolor: "primary.dark",
-                  color: "white",
-                },
-              }}
-            >
-              Cancel
-            </Button>
+            />
           </Stack>
         </div>
       </BootstrapDialog>
