@@ -8,8 +8,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../config/materialTheme";
 import React from "react";
 
-// This implementation is from emotion-js
-// https://github.com/emotion-js/emotion/issues/2928#issuecomment-1319747902
 export default function ThemeRegistry(props: any) {
   const pathName = usePathname();
   const { options, children } = props;
